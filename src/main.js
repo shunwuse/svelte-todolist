@@ -1,7 +1,6 @@
-import './app.css'
-import App from './App.svelte'
+import Todo from './Todo.svelte'
 
-const app = new App({
+const app = new Todo({
   target: document.getElementById('app'),
 })
 
