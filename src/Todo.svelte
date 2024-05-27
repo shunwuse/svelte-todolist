@@ -1,7 +1,11 @@
 <script>
   let text = "";
 
-  let tasks = [{ id: 1, text: "Task 1", isChecked: false }];
+  let tasks = [
+    { id: 1, text: "Task 1", isChecked: false, isComplete: false },
+    { id: 2, text: "Task 2", isChecked: true, isComplete: true },
+    { id: 3, text: "Task 3", isChecked: false, isComplete: false },
+  ];
 
   const addTask = () => {
     if (text.length <= 0) {
@@ -13,10 +17,25 @@
       id: tasks.length + 1,
       text: text,
       isChecked: false,
+      isComplete: false,
     };
 
     tasks = [...tasks, newTask];
     text = "";
+  };
+
+  const doneTask = () => {
+    tasks = tasks.map((task) => {
+      if (task.isChecked) {
+        task.isComplete = true;
+      }
+
+      return task;
+    });
+  };
+
+  $: countNotComplete = () => {
+    return tasks.filter((task) => !task.isComplete).length;
   };
 </script>
 
@@ -26,15 +45,30 @@
   <div class="todo-list">
     <ul class="todo-ul">
       {#each tasks as task}
-        <li class="todo-li">
-          <input type="checkbox" checked={task.isChecked} />
+        <li class={task.isComplete ? "todo-li-complete" : "todo-li"}>
+          <input
+            type="checkbox"
+            checked={task.isChecked}
+            disabled={task.isComplete}
+            on:change={() => {
+              task.isChecked = !task.isChecked;
+              tasks = [...tasks];
+            }}
+          />
           <span>{task.text}</span>
         </li>
       {/each}
     </ul>
   </div>
 
-  <div class="todo-total">Total Task: 4, Not Complate: 0</div>
+  <div class="todo-total">
+    Total Task: {tasks.length}, Not Complate: {countNotComplete()} [<span
+      class="todo-done"
+      on:click={doneTask}
+    >
+      Done
+    </span>]
+  </div>
 
   <div class="todo-add-area">
     <input
@@ -71,15 +105,23 @@
         padding: 0;
         margin: 0;
       }
-      .todo-li {
+      .todo-li,
+      .todo-li-complete {
         padding: 10px 0;
         list-style: none;
         border-bottom: 1px solid #e0e0e0;
+      }
+      .todo-li-complete {
+        text-decoration: line-through;
       }
     }
 
     .todo-total {
       padding: 10px 0;
+    }
+    .todo-done {
+      cursor: pointer;
+      color: blue;
     }
 
     .todo-add-area {
