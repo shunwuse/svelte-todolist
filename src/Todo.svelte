@@ -1,4 +1,23 @@
 <script>
+  let text = "";
+
+  let tasks = [{ id: 1, text: "Task 1", isChecked: false }];
+
+  const addTask = () => {
+    if (text.length <= 0) {
+      alert("Please enter task");
+      return;
+    }
+
+    const newTask = {
+      id: tasks.length + 1,
+      text: text,
+      isChecked: false,
+    };
+
+    tasks = [...tasks, newTask];
+    text = "";
+  };
 </script>
 
 <div class="todo">
@@ -6,18 +25,25 @@
 
   <div class="todo-list">
     <ul class="todo-ul">
-      <li class="todo-li">
-        <input type="checkbox" />
-        <span>Task 1</span>
-      </li>
+      {#each tasks as task}
+        <li class="todo-li">
+          <input type="checkbox" checked={task.isChecked} />
+          <span>{task.text}</span>
+        </li>
+      {/each}
     </ul>
   </div>
 
   <div class="todo-total">Total Task: 4, Not Complate: 0</div>
 
   <div class="todo-add-area">
-    <input class="todo-add-input" type="text" placeholder="Add new task" />
-    <button class="todo-add-button">Add</button>
+    <input
+      class="todo-add-input"
+      bind:value={text}
+      type="text"
+      placeholder="Add new task"
+    />
+    <button class="todo-add-button" on:click={addTask}>Add</button>
   </div>
 </div>
 
@@ -59,7 +85,7 @@
     .todo-add-area {
       display: flex;
 
-      .todo-add-input  {
+      .todo-add-input {
         flex: 0;
         min-width: 200px;
       }
