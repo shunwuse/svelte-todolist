@@ -1,4 +1,6 @@
 <script>
+  import TodoList from "./TodoList.svelte";
+
   let text = "";
 
   let tasks = [
@@ -6,8 +8,6 @@
     { id: 2, text: "Task 2", isChecked: true, isComplete: true },
     { id: 3, text: "Task 3", isChecked: false, isComplete: false },
   ];
-
-  let editedId = 0;
 
   const addTask = () => {
     if (text.length <= 0) {
@@ -40,18 +40,6 @@
     tasks = tasks.filter((task) => !task.isChecked || task.isComplete);
   };
 
-  const setEditedId = (id) => {
-    console.log("clicked id: ", id);
-
-    const task = tasks.find((task) => task.id === id);
-
-    console.log("task: ", task);
-
-    if (!task.isComplete) {
-      editedId = id;
-    }
-  };
-
   $: countNotComplete = () => {
     return tasks.filter((task) => !task.isComplete).length;
   };
@@ -60,50 +48,15 @@
 <div class="todo">
   <div class="todo-header">TODO LIST</div>
 
-  <div class="todo-list">
-    <ul class="todo-ul">
-      {#each tasks as task}
-        <li class={task.isComplete ? "todo-li-complete" : "todo-li"}>
-          <input
-            type="checkbox"
-            checked={task.isChecked}
-            disabled={task.isComplete}
-            on:change={() => {
-              task.isChecked = !task.isChecked;
-              tasks = [...tasks];
-            }}
-          />
-          {#if task.id === editedId}
-            <input
-              type="text"
-              bind:value={task.text}
-              on:blur={() => {
-                editedId = 0;
-              }}
-            />
-          {:else}
-            <span on:click={setEditedId(task.id)}>{task.text}</span>
-          {/if}
-        </li>
-      {/each}
-    </ul>
-  </div>
+  <TodoList {tasks} />
 
   <div>
-    [<span
-      class="todo-done"
-      on:click={doneTask}
-    >
-      Done
-    </span>]
-    &nbsp;
-    [<span
+    [<span class="todo-done" on:click={doneTask}> Done </span>] &nbsp; [<span
       class="todo-delete"
       on:click={deleteTask}
     >
       Delete
     </span>]
-
   </div>
 
   <div class="todo-total">
@@ -137,23 +90,6 @@
       text-align: center;
       font-size: 36px;
       font-weight: 600;
-    }
-
-    .todo-list {
-      margin-top: 20px;
-      .todo-ul {
-        padding: 0;
-        margin: 0;
-      }
-      .todo-li,
-      .todo-li-complete {
-        padding: 10px 0;
-        list-style: none;
-        border-bottom: 1px solid #e0e0e0;
-      }
-      .todo-li-complete {
-        text-decoration: line-through;
-      }
     }
 
     .todo-total {
