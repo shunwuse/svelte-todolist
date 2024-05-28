@@ -1,5 +1,6 @@
 <script>
   import TodoList from "./TodoList.svelte";
+  import TodoTotal from "./TodoTotal.svelte";
 
   let text = "";
 
@@ -26,22 +27,8 @@
     text = "";
   };
 
-  const doneTask = () => {
-    tasks = tasks.map((task) => {
-      if (task.isChecked) {
-        task.isComplete = true;
-      }
-
-      return task;
-    });
-  };
-
-  const deleteTask = () => {
-    tasks = tasks.filter((task) => !task.isChecked || task.isComplete);
-  };
-
-  $: countNotComplete = () => {
-    return tasks.filter((task) => !task.isComplete).length;
+  const updateTasks = (e) => {
+    tasks = e.detail;
   };
 </script>
 
@@ -50,18 +37,7 @@
 
   <TodoList {tasks} />
 
-  <div>
-    [<span class="todo-done" on:click={doneTask}> Done </span>] &nbsp; [<span
-      class="todo-delete"
-      on:click={deleteTask}
-    >
-      Delete
-    </span>]
-  </div>
-
-  <div class="todo-total">
-    Total Task: {tasks.length}, Not Complate: {countNotComplete()}
-  </div>
+  <TodoTotal {tasks} on:updateTasks={updateTasks} />
 
   <div class="todo-add-area">
     <input
@@ -90,18 +66,6 @@
       text-align: center;
       font-size: 36px;
       font-weight: 600;
-    }
-
-    .todo-total {
-      padding: 10px 0;
-    }
-    .todo-done {
-      cursor: pointer;
-      color: blue;
-    }
-    .todo-delete {
-      cursor: pointer;
-      color: red;
     }
 
     .todo-add-area {
