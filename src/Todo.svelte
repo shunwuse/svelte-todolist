@@ -7,6 +7,8 @@
     { id: 3, text: "Task 3", isChecked: false, isComplete: false },
   ];
 
+  let editedId = 0;
+
   const addTask = () => {
     if (text.length <= 0) {
       alert("Please enter task");
@@ -34,6 +36,18 @@
     });
   };
 
+  const setEditedId = (id) => {
+    console.log("clicked id: ", id);
+
+    const task = tasks.find((task) => task.id === id);
+
+    console.log("task: ", task);
+
+    if (!task.isComplete) {
+      editedId = id;
+    }
+  };
+
   $: countNotComplete = () => {
     return tasks.filter((task) => !task.isComplete).length;
   };
@@ -55,7 +69,17 @@
               tasks = [...tasks];
             }}
           />
-          <span>{task.text}</span>
+          {#if task.id === editedId}
+            <input
+              type="text"
+              bind:value={task.text}
+              on:blur={() => {
+                editedId = 0;
+              }}
+            />
+          {:else}
+            <span on:click={setEditedId(task.id)}>{task.text}</span>
+          {/if}
         </li>
       {/each}
     </ul>
