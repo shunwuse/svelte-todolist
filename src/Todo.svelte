@@ -85,13 +85,17 @@
     </ul>
   </div>
 
-  <div class="todo-total">
-    Total Task: {tasks.length}, Not Complate: {countNotComplete()} [<span
+  <div>
+    [<span
       class="todo-done"
       on:click={doneTask}
     >
       Done
     </span>]
+  </div>
+
+  <div class="todo-total">
+    Total Task: {tasks.length}, Not Complate: {countNotComplete()}
   </div>
 
   <div class="todo-add-area">
