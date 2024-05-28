@@ -36,6 +36,10 @@
     });
   };
 
+  const deleteTask = () => {
+    tasks = tasks.filter((task) => !task.isChecked || task.isComplete);
+  };
+
   const setEditedId = (id) => {
     console.log("clicked id: ", id);
 
@@ -92,6 +96,14 @@
     >
       Done
     </span>]
+    &nbsp;
+    [<span
+      class="todo-delete"
+      on:click={deleteTask}
+    >
+      Delete
+    </span>]
+
   </div>
 
   <div class="todo-total">
@@ -150,6 +162,10 @@
     .todo-done {
       cursor: pointer;
       color: blue;
+    }
+    .todo-delete {
+      cursor: pointer;
+      color: red;
     }
 
     .todo-add-area {
